@@ -2,23 +2,43 @@ package com.zlobrynya.colorgame;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+
+import static java.lang.Math.abs;
 
 public class MapClass {
 
     private CellMatrix[][] map;
+
     private int sizeHeight;
     private int sizeWigth;
-    private float widthCell;
+    private int colum;
+    private int row;
+    private int direction;
+
+    private float wigthCell;
     private float heigthCell;
+    private float maxAriaHeight;
+    private float maxAriaWigth;
+
+    private boolean motion;
 
     public MapClass(int sizeHeight, int sizeWigth, float wigthCell, float heigthCell){
-        this.widthCell = 50;//wigthCell;
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
+        this.wigthCell = 50;//wigthCell;
         this.heigthCell = 50;//heigthCell;
         this.sizeHeight = sizeHeight;
         this.sizeWigth = sizeWigth;
+        motion = false;
 
-        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+        colum = row = -1;
+
+        maxAriaHeight = sizeHeight * this.heigthCell;
+        maxAriaWigth = sizeWigth * this.wigthCell;
+        Gdx.app.log("Max Heigth: ", String.valueOf(maxAriaHeight));
+        Gdx.app.log("Max Wigth: ", String.valueOf(maxAriaWigth));
+
+
 
         map = new CellMatrix[sizeHeight][sizeWigth];
         createMap(sizeHeight,sizeWigth);
@@ -41,7 +61,7 @@ public class MapClass {
         }
 
         map[4][4] = new CellMatrix("",3);
-        debugOutMatrix();
+        //debugOutMatrix();
     }
 
     private void debugOutMatrix(){
@@ -58,8 +78,8 @@ public class MapClass {
         return heigthCell;
     }
 
-    public float getWidthCell() {
-        return widthCell;
+    public float getWigthCell() {
+        return wigthCell;
     }
 
     public int getSizeHeight() {
@@ -77,4 +97,94 @@ public class MapClass {
     public String getNameSprite(int x, int y){
         return map[x][y].getNameSprite();
     }
+
+    public boolean isArea(float x, float y){
+        return ((x > 0 && x < maxAriaWigth) && (y > 0 && y < maxAriaHeight));
+    }
+
+    public void motionCell(float x, float y, float deltaX, float deltaY){
+        if (!motion){
+            if (deltaX > 60 || deltaX < -60){
+               // motionColum(x);
+                motionRow(y);
+            }else if (deltaY > 60 || deltaY < -60){
+                motionColum(y);
+            }
+        }
+    }
+
+    private void motionColum(float x){
+        motion = true;
+
+        if (x > 0)
+            direction = 1;
+        else direction = -1;
+
+        colum = -1;
+        row = (int) (x / wigthCell);
+    }
+
+    private void motionRow(float y){
+        motion = true;
+
+        if (y > 0)
+            direction = 1;
+        else direction = -1;
+
+        row = -1;
+        colum = (int) (y / heigthCell);
+    }
+
+    public void  motionStop(){
+        motionCell();
+        motion = false;
+        direction = 0;
+    }
+
+    private void motionCell(){
+        if (colum > -1){
+            recursMoveRow(0,false);
+        }else if (row > -1){
+            recursMoveColum(0,false);
+        }
+    }
+
+    private void recursMoveRow(int row, boolean emptyCell){
+        Gdx.app.log("mov",colum + " " + row);
+        if (row < sizeWigth){
+            if (map[colum][row].getId() == 0){
+                recursMoveRow(row+direction, true);
+            }else {
+                if (emptyCell) {
+                    CellMatrix cellMatrix = map[colum][row];
+                    map[colum][row-abs(direction)] = cellMatrix;
+                    cellMatrix.setId(2);
+                    map[colum][row] = cellMatrix;
+                    recursMoveRow(row+direction, true);
+                } else{
+                    recursMoveRow(row+direction,false);
+                }
+            }
+        }
+     }
+
+    private void recursMoveColum(int colum, boolean emptyCell){
+        if (colum <= sizeHeight){
+            if (map[colum][row].getId() == 0){
+                recursMoveRow(colum+direction, true);
+            }else {
+                if (emptyCell) {
+                    CellMatrix cellMatrix = map[colum][row];
+                    map[colum-abs(direction)][row] = cellMatrix;
+                    cellMatrix.setId(0);
+                    map[colum][row] = cellMatrix;
+                    recursMoveRow(colum+direction, true);
+                } else{
+                    recursMoveRow(colum+direction,false);
+                }
+            }
+        }
+    }
+
+
 }

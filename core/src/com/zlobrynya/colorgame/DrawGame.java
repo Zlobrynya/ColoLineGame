@@ -22,7 +22,7 @@ public class DrawGame {
 
 
     public void drawMap(MapClass mapClass){
-         float wigthCell = mapClass.getWidthCell();
+         float wigthCell = mapClass.getWigthCell();
          float heigthCell = mapClass.getHeigthCell();
         //debugOutMatrix();
         for (int heigth = 0; heigth < mapClass.getSizeHeight(); heigth++)
@@ -37,6 +37,7 @@ public class DrawGame {
                         break;
                     case 3:
                         drawActionBall(coordX,coordY,wigthCell,heigthCell);
+                        //Gdx.app.log("Coor Act", coordX + " " + coordY);
                     case 0:
                         drawMapCell(coordX,coordY,wigthCell,heigthCell);
                         break;

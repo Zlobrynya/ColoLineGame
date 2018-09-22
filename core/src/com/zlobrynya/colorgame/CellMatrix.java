@@ -18,4 +18,8 @@ public class CellMatrix {
     public String getNameSprite() {
         return nameSprite;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
@@ -42,16 +43,11 @@ public class MainGameClass extends ApplicationAdapter {
 		//sprite = textureAtlas.createSprite("crate");
 		mapClass = new MapClass(sizeScreenBlockH,sizeScreenBlockW,50,50);
         drawGame = new DrawGame(batch);
+
+        Gdx.input.setInputProcessor((new GestureDetector(new InputHandler(mapClass,camera))));
+
     }
 
-	private void addSprites(){
-        Array<TextureAtlas.AtlasRegion> regions = textureAtlas.getRegions();
-
-        for (TextureAtlas.AtlasRegion region : regions){
-            Sprite sprite = textureAtlas.createSprite(region.name);
-            sprites.put(region.name,sprite);
-        }
-    }
 
     @Override
     public void resize(int width, int height) {
@@ -63,18 +59,7 @@ public class MainGameClass extends ApplicationAdapter {
 	public void render () {
         Gdx.gl.glClearColor(0.57f, 0.77f, 0.85f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		//batch.begin();
-		//sprite.draw(batch);
-		//batch.draw(img, 0, 0);
-        int locPosX = 0;
-        /*for (int i = 0; i < sizeScreenBlockW; i++){
-            drawScripte("crate",locPosX,50);
-            locPosX += (widthCell - 4);
-        }*/
-        drawGame.drawMap(mapClass);
-		//drawScripte("crate",100,50);
-        //drawScripte("crate",150,50);
-        //batch.end();
+		drawGame.drawMap(mapClass);
 	}
 	
 	@Override
