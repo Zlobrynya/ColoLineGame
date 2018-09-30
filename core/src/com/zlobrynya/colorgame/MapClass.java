@@ -61,6 +61,8 @@ public class MapClass {
         }
 
         map[4][4] = new CellMatrix("",3);
+        map[3][4] = new CellMatrix("",3);
+
         //debugOutMatrix();
     }
 
@@ -68,7 +70,7 @@ public class MapClass {
         StringBuilder debug = new StringBuilder();
         for (int heigth = 0; heigth < sizeHeight; heigth++){
             for (int wigth = 0; wigth < sizeWigth; wigth++)
-                debug.append(map[heigth][wigth].getId()).append(" ");
+                debug.append(map[wigth][heigth].getId()).append(" ");
             Gdx.app.log("Matrix: ", debug.toString());
             debug = new StringBuilder();
         }
@@ -105,34 +107,29 @@ public class MapClass {
     public void motionCell(float x, float y, float deltaX, float deltaY){
         if (!motion){
             if (deltaX > 60 || deltaX < -60){
-               // motionColum(x);
-                motionRow(y);
+                motionRow(y,deltaX);
             }else if (deltaY > 60 || deltaY < -60){
-                motionColum(y);
+                motionColum(x,deltaY);
             }
         }
     }
 
-    private void motionColum(float x){
+    private void motionColum(float x, float deltaY){
         motion = true;
-
-        if (x > 0)
+        if (deltaY > 0)
             direction = 1;
         else direction = -1;
-
-        colum = -1;
-        row = (int) (x / wigthCell);
+        row = -1;
+        colum = (int) Math.floor(x / wigthCell);
     }
 
-    private void motionRow(float y){
+    private void motionRow(float y, float deltaX){
         motion = true;
-
-        if (y > 0)
+        if (deltaX > 0)
             direction = 1;
         else direction = -1;
-
-        row = -1;
-        colum = (int) (y / heigthCell);
+        colum = -1;
+        row = (int) Math.floor(y / heigthCell);
     }
 
     public void  motionStop(){
@@ -142,24 +139,28 @@ public class MapClass {
     }
 
     private void motionCell(){
-        if (colum > -1){
-            recursMoveRow(0,false);
-        }else if (row > -1){
-            recursMoveColum(0,false);
+        if (colum > -1 && row < 12){
+            if (direction > 0)
+                recursMoveRow(0, false);
+            else recursMoveRow(11,false);
+        }else if (row > -1 && colum < 12){
+            if (direction > 0)
+                recursMoveColum(0, false);
+            else recursMoveColum(11,false);
         }
     }
 
     private void recursMoveRow(int row, boolean emptyCell){
-        Gdx.app.log("mov",colum + " " + row);
-        if (row < sizeWigth){
+      //  Gdx.app.log("mov",colum + " " + row);
+        if (row < sizeWigth && row > 0){
             if (map[colum][row].getId() == 0){
                 recursMoveRow(row+direction, true);
             }else {
                 if (emptyCell) {
                     CellMatrix cellMatrix = map[colum][row];
-                    map[colum][row-abs(direction)] = cellMatrix;
-                    cellMatrix.setId(2);
-                    map[colum][row] = cellMatrix;
+                    CellMatrix cellMatrix1 = map[colum][row+abs(direction)];
+                    cellMatrix1.setId(cellMatrix.getId());
+                    cellMatrix.setId(0);
                     recursMoveRow(row+direction, true);
                 } else{
                     recursMoveRow(row+direction,false);
@@ -169,18 +170,18 @@ public class MapClass {
      }
 
     private void recursMoveColum(int colum, boolean emptyCell){
-        if (colum <= sizeHeight){
+        if (colum < sizeHeight && colum > 0){
             if (map[colum][row].getId() == 0){
-                recursMoveRow(colum+direction, true);
+                recursMoveColum(colum+direction, true);
             }else {
                 if (emptyCell) {
                     CellMatrix cellMatrix = map[colum][row];
-                    map[colum-abs(direction)][row] = cellMatrix;
+                    CellMatrix cellMatrix2 = map[colum+abs(direction)][row];
+                    cellMatrix2.setId(cellMatrix.getId());
                     cellMatrix.setId(0);
-                    map[colum][row] = cellMatrix;
-                    recursMoveRow(colum+direction, true);
+                    recursMoveColum(colum+direction, true);
                 } else{
-                    recursMoveRow(colum+direction,false);
+                    recursMoveColum(colum+direction,false);
                 }
             }
         }
