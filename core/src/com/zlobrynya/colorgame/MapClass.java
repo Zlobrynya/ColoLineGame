@@ -3,7 +3,12 @@ package com.zlobrynya.colorgame;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 
+import java.util.Random;
+
+import static com.badlogic.gdx.math.MathUtils.random;
 import static java.lang.Math.abs;
+import static java.lang.Math.cbrt;
+import static java.lang.Math.round;
 
 public class MapClass {
 
@@ -14,6 +19,7 @@ public class MapClass {
     private int colum;
     private int row;
     private int direction;
+    private int extrimExitRecurs;
 
     private float wigthCell;
     private float heigthCell;
@@ -21,6 +27,8 @@ public class MapClass {
     private float maxAriaWigth;
 
     private boolean motion;
+
+    final Random random = new Random();
 
     public MapClass(int sizeHeight, int sizeWigth, float wigthCell, float heigthCell){
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
@@ -32,6 +40,7 @@ public class MapClass {
         motion = false;
 
         colum = row = -1;
+        extrimExitRecurs = 0;
 
         maxAriaHeight = sizeHeight * this.heigthCell;
         maxAriaWigth = sizeWigth * this.wigthCell;
@@ -61,7 +70,7 @@ public class MapClass {
         }
 
         map[4][4] = new CellMatrix("",3);
-        map[3][4] = new CellMatrix("",3);
+        map[2][4] = new CellMatrix("",3);
 
         //debugOutMatrix();
     }
@@ -117,8 +126,8 @@ public class MapClass {
     private void motionColum(float x, float deltaY){
         motion = true;
         if (deltaY > 0)
-            direction = 1;
-        else direction = -1;
+            direction = -1;
+        else direction = 1;
         row = -1;
         colum = (int) Math.floor(x / wigthCell);
     }
@@ -136,29 +145,37 @@ public class MapClass {
         motionCell();
         motion = false;
         direction = 0;
+        extrimExitRecurs = 0;
+        addAction(3);
     }
 
     private void motionCell(){
         if (colum > -1 && row < 12){
             if (direction > 0)
-                recursMoveRow(0, false);
+                recursMoveRow(1, false);
             else recursMoveRow(11,false);
         }else if (row > -1 && colum < 12){
             if (direction > 0)
-                recursMoveColum(0, false);
+                recursMoveColum(1, false);
             else recursMoveColum(11,false);
         }
     }
 
+    //BUUUUUUUUUUUUUUUUUUGGG   invers pan
     private void recursMoveRow(int row, boolean emptyCell){
-      //  Gdx.app.log("mov",colum + " " + row);
-        if (row < sizeWigth && row > 0){
+        if (extrimExitRecurs > 12)
+            return;
+        extrimExitRecurs++;
+        if (row+direction < sizeWigth && row > 0){
             if (map[colum][row].getId() == 0){
                 recursMoveRow(row+direction, true);
             }else {
                 if (emptyCell) {
                     CellMatrix cellMatrix = map[colum][row];
-                    CellMatrix cellMatrix1 = map[colum][row+abs(direction)];
+                    CellMatrix cellMatrix1;
+                    if (direction > 0)
+                        cellMatrix1 = map[colum][row-direction];
+                    else cellMatrix1 = map[colum][row+abs(direction)];
                     cellMatrix1.setId(cellMatrix.getId());
                     cellMatrix.setId(0);
                     recursMoveRow(row+direction, true);
@@ -170,13 +187,19 @@ public class MapClass {
      }
 
     private void recursMoveColum(int colum, boolean emptyCell){
-        if (colum < sizeHeight && colum > 0){
+        if (extrimExitRecurs > 12)
+            return;
+        extrimExitRecurs++;
+        if (colum+direction < sizeHeight && colum > 0){
             if (map[colum][row].getId() == 0){
                 recursMoveColum(colum+direction, true);
             }else {
                 if (emptyCell) {
                     CellMatrix cellMatrix = map[colum][row];
-                    CellMatrix cellMatrix2 = map[colum+abs(direction)][row];
+                    CellMatrix cellMatrix2;
+                    if (direction > 0)
+                        cellMatrix2 = map[colum-direction][row];
+                    else cellMatrix2 = map[colum+abs(direction)][row];
                     cellMatrix2.setId(cellMatrix.getId());
                     cellMatrix.setId(0);
                     recursMoveColum(colum+direction, true);
@@ -187,5 +210,14 @@ public class MapClass {
         }
     }
 
+    private void addAction(int count){
+        for (int i = 0; i < count; i++){
+            int colum = random(9)+1;
+            int row = random(9)+1;
+            if (map[colum][row].getId() == 0)
+                map[colum][row].setId(3);
+            Gdx.app.log("add",colum + " " + row + " " + map[colum][row].getId());
+        }
+    }
 
 }
