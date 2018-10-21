@@ -56,7 +56,7 @@ public class InputHandler implements GestureDetector.GestureListener {
     public boolean pan(float x, float y, float deltaX, float deltaY) {
         //  rope.setStartPosition(x-deltaX,y-deltaY);
         Vector3 vector3 = convertCoord(x,y);
-        //Gdx.app.log("pan", "x: " + vector3.x +" y: "+vector3.y+" deltaX: "+deltaX+" deltaY: "+deltaY);
+       // Gdx.app.log("pan", "x: " + vector3.x +" y: "+vector3.y+" deltaX: "+deltaX+" deltaY: "+deltaY);
         mapClass.motionCell(vector3.x,vector3.y,deltaX,deltaY);
         return false;
     }

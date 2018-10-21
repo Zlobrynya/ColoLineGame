@@ -35,13 +35,12 @@ public class DrawGame {
                         drawSprite(textureAtlas.createSprite(mapClass.getNameSprite(wigth,heigth)),
                         wigthCell,heigthCell,wigth,heigth);
                         break;
-                    case 3:
-                        drawActionBall(coordX,coordY,wigthCell,heigthCell);
-                        //Gdx.app.log("Coor Act", coordX + " " + coordY);
                     case 0:
                         drawMapCell(coordX,coordY,wigthCell,heigthCell);
                         break;
                     default:
+                        drawActionBall(coordX,coordY,wigthCell,heigthCell,mapClass.getColorCell(heigth,wigth));
+                        drawMapCell(coordX,coordY,wigthCell,heigthCell);
                         break;
                 }
             }
@@ -55,13 +54,13 @@ public class DrawGame {
          shapeRenderer.end();
     }
 
-     private void drawActionBall(float coordX, float coordY, float wigth, float heigth){
+     private void drawActionBall(float coordX, float coordY, float wigth, float heigth, Color color){
          coordX = coordX  + (heigth / 2) - 2;
          coordY = coordY  + (wigth / 2) - 2;
 
          shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
          shapeRenderer.setProjectionMatrix(spriteBatch.getProjectionMatrix());
-         shapeRenderer.setColor(Color.RED);
+         shapeRenderer.setColor(color);
          shapeRenderer.circle(coordX,coordY,10);
          shapeRenderer.end();
      }
