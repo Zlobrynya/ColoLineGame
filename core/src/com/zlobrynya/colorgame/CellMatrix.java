@@ -8,10 +8,12 @@ public class CellMatrix {
     private String nameSprite;
     private int id;
     private Color color;
+    private boolean delete;
 
     CellMatrix(String nameSpritt, int id){
         this.nameSprite = nameSpritt;
         this.id = id;
+        delete = false;
         setColor();
     }
 
@@ -39,6 +41,9 @@ public class CellMatrix {
             case 9:
                 color = Color.GREEN;
                 break;
+             default:
+                color = Color.WHITE;
+                break;
         }
     }
 
@@ -50,8 +55,20 @@ public class CellMatrix {
         return nameSprite;
     }
 
+    public void setNameSprite(String nameSprite) {
+        this.nameSprite = nameSprite;
+    }
+
     public void setId(int id) {
         this.id = id;
         setColor();
+    }
+
+    public boolean isDelete() {
+        return delete;
+    }
+
+    public void setDelete(boolean delete) {
+        this.delete = delete;
     }
 }

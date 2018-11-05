@@ -32,7 +32,7 @@ public class DrawGame {
 
                 switch (mapClass.getIdCell(heigth,wigth)){
                     case 1:
-                        drawSprite(textureAtlas.createSprite(mapClass.getNameSprite(wigth,heigth)),
+                        drawSprite(textureAtlas.createSprite(mapClass.getNameSprite(heigth,wigth)),
                         wigthCell,heigthCell,wigth,heigth);
                         break;
                     case 0:
@@ -68,6 +68,7 @@ public class DrawGame {
      private void drawSprite(Sprite sprite,float widthCell, float heigthCell, int width, int heigth){
          spriteBatch.begin();
          //sprite.setPosition(heigth*mapClass.getHeigthCell(),wigth* mapClass.getSizeWigth());
+         //Gdx.app.log("Draw", widthCell + " " + heigthCell + " " + width + " " + heigth + " " +  sprite);
          sprite.setPosition(heigth*heigthCell-4,width*widthCell);
          sprite.setSize(heigthCell,widthCell);
          sprite.draw(spriteBatch);
