@@ -24,12 +24,12 @@ public class MainGameClass extends ApplicationAdapter {
 
     private MapClass mapClass;
     private DrawGame drawGame;
+    private Player playerData;
 
     //const variable
     private final float worldWidth = 600;
     private final float worldHeight = 800;
-    private final int sizeScreenBlockH = 12;
-    private final int sizeScreenBlockW = 12;
+    private final int sizeScreenBlock = 8;
 
 
     @Override
@@ -40,8 +40,13 @@ public class MainGameClass extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		textureAtlas = new TextureAtlas("sprite.txt");
 
+		playerData = new Player(0);
+
 		//sprite = textureAtlas.createSprite("crate");
-		mapClass = new MapClass(sizeScreenBlockH,sizeScreenBlockW,50,50);
+        int wigthCell = (int) Math.floor(worldWidth/sizeScreenBlock);
+        int heigthCell = (int) Math.floor(worldWidth/sizeScreenBlock);
+
+		mapClass = new MapClass(sizeScreenBlock,wigthCell,heigthCell,playerData);
         drawGame = new DrawGame(batch);
 
         Gdx.input.setInputProcessor((new GestureDetector(new InputHandler(mapClass,camera))));
@@ -59,7 +64,7 @@ public class MainGameClass extends ApplicationAdapter {
 	public void render () {
         Gdx.gl.glClearColor(0.57f, 0.77f, 0.85f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		drawGame.drawMap(mapClass);
+		drawGame.drawMap(mapClass, playerData);
 	}
 	
 	@Override

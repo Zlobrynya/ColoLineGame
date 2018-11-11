@@ -3,6 +3,7 @@ package com.zlobrynya.colorgame;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -13,6 +14,9 @@ public class DrawGame {
     private TextureAtlas textureAtlas;
     private ShapeRenderer shapeRenderer;
 
+    //draw Text
+    BitmapFont font = new BitmapFont();
+
     DrawGame(SpriteBatch spriteBatch){
         this.spriteBatch = spriteBatch;
         textureAtlas = new TextureAtlas("sprite.txt");
@@ -21,12 +25,13 @@ public class DrawGame {
     }
 
 
-    public void drawMap(MapClass mapClass){
-         float wigthCell = mapClass.getWigthCell();
-         float heigthCell = mapClass.getHeigthCell();
+    public void drawMap(MapClass mapClass, Player playerData){
+        float wigthCell = mapClass.getWigthCell();
+        float heigthCell = mapClass.getHeigthCell();
         //debugOutMatrix();
-        for (int heigth = 0; heigth < mapClass.getSizeHeight(); heigth++)
-            for (int wigth = 0; wigth < mapClass.getSizeWigth(); wigth++) {
+        drawText(playerData,150, 750, 0);
+        for (int heigth = 0; heigth < mapClass.getSize(); heigth++)
+            for (int wigth = 0; wigth < mapClass.getSize(); wigth++) {
                 float coordX = heigth*heigthCell;
                 float coordY = wigth*wigthCell;
 
@@ -45,6 +50,13 @@ public class DrawGame {
                 }
             }
      }
+
+     private void drawText(Player playerData, float coordX, float coordY, float size){
+         spriteBatch.begin();
+         font.draw(spriteBatch, "Score: " + playerData.getScore(), coordX , coordY);
+         spriteBatch.end();
+     }
+
 
      private void drawMapCell(float coordX, float coordY, float wigth, float heigth){
          shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
