@@ -62,9 +62,7 @@ public class MainGameClass extends ApplicationAdapter {
 
     @Override
 	public void render () {
-        Gdx.gl.glClearColor(0.57f, 0.77f, 0.85f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		drawGame.drawMap(mapClass, playerData);
+        drawGame.drawGame(mapClass, playerData, mapClass.getStatus());
 	}
 	
 	@Override

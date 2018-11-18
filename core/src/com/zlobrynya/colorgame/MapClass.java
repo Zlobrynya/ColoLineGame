@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 
 import java.util.Random;
 
+import static com.badlogic.gdx.math.MathUtils.degRad;
 import static com.badlogic.gdx.math.MathUtils.random;
 import static java.lang.Math.abs;
 import static java.lang.Math.round;
@@ -20,13 +21,14 @@ public class MapClass {
     private int row;
     private int direction;
     private int extrimExitRecurs;
+    private int freeCell;
 
     private float wigthCell;
     private float heigthCell;
     private float maxAriaHeight;
     private float maxAriaWigth;
 
-    private boolean motion;
+    private StatusDrawGame status;
 
     //final Random random = new Random();
 
@@ -39,21 +41,19 @@ public class MapClass {
         this.heigthCell = heigthCell;
         this.size = size;
         //this.sizeWigth = sizeWigth;
-        motion = false;
+        status = StatusDrawGame.MOUTION;
 
         colum = row = -1;
-        extrimExitRecurs = 0;
+        extrimExitRecurs  = 0;
+        freeCell = size * size;
 
         maxAriaHeight = size * this.heigthCell;
         maxAriaWigth = size * this.wigthCell;
         Gdx.app.log("Max Heigth: ", String.valueOf(maxAriaHeight));
         Gdx.app.log("Max Wigth: ", String.valueOf(maxAriaWigth));
 
-
-
         map = new CellMatrix[size][size];
         createMap(size);
-
     }
 
     private void createMap(int size){
@@ -72,12 +72,13 @@ public class MapClass {
         }
 
         addAction(4);
-       /* map[2][5] = new CellMatrix("",7);
-        map[2][4] = new CellMatrix("",7);
-        map[3][6] = new CellMatrix("",7);*/
-        map[6][4].setId(1);
-        map[6][4].setNameSprite("crate");
+        addBlock(3,2);
         debugOutMatrix();
+    }
+
+    private void addBlock(int x, int y){
+        map[x][y].setId(1);
+        map[x][y].setNameSprite("crate");
     }
 
     private void debugOutMatrix(){
@@ -95,7 +96,7 @@ public class MapClass {
     }
 
     public void motionCell(float x, float y, float deltaX, float deltaY){
-        if (!motion){
+        if (status == StatusDrawGame.STOP){
             if (deltaX > 60 || deltaX < -60){
                 motionRow(y,deltaX);
             }else if (deltaY > 60 || deltaY < -60){
@@ -105,7 +106,7 @@ public class MapClass {
     }
 
     private void motionColum(float x, float deltaY){
-        motion = true;
+        status = StatusDrawGame.MOUTION;
         if (deltaY > 0)
             direction = 1;
         else direction = -1;
@@ -114,36 +115,34 @@ public class MapClass {
     }
 
     private void motionRow(float y, float deltaX){
-        motion = true;
+        status = StatusDrawGame.MOUTION;
         if (deltaX > 0)
             direction = -1;
         else direction = 1;
         colum = -1;
-        row = (int) Math.floor(y / heigthCell);
+        row = (int) Math.floor((y - DrawGame.INDENT) / heigthCell);
     }
 
     public void  motionStop(){
-        motionCell();
-//        debugOutMatrix();
-        if (colum > -1 && row < 12) {
+        motionCell();if (colum > -1 && row < size && colum < size) {
             checkMatch3(colum,false);
-        }else if (row > -1 && colum < 12){
+        }else if (row > -1 && colum < size && row < size){
             checkMatch3(row,true);
         }
-        motion = false;
+        status = StatusDrawGame.MOUTION;
         direction = 0;
         extrimExitRecurs = 0;
         //RANDOM BOLL
-        addAction(3);
+        addAction(2);
     }
 
     private void motionCell(){
-        if (colum > -1 && row < 12){
+        if (colum > -1 && row < size && colum < size){
             CellMatrix array[] = getArray(colum);
             if (direction > 0)
                 recursMove(1, false, array);
             else recursMove(size -1,false, array);
-        }else if (row > -1 && colum < 12){
+        }else if (row > -1 && colum < size && row < size){
             CellMatrix array[] = getArray(row);
             if (direction > 0)
                 recursMove(1, false, array);
@@ -182,13 +181,10 @@ public class MapClass {
             areaMatrix = map;
         }
 
-        //for(int i = 0, j = -2; i < 5; i++,j++)
-        //    areaMatrix[i] = getArray(numberLine-j);
-
         int countColor = 1;
         for (int line = 2; line < size; line++){
             if (areaMatrix[numberLine][line].getId() > 5){
-                if (areaMatrix[numberLine][line].getId() == areaMatrix[2][line-1].getId()){
+                if (areaMatrix[numberLine][line].getId() == areaMatrix[numberLine][line-1].getId()){
                     countColor++;
                     if (countColor == 3){
                         areaMatrix[numberLine][line].setDelete(true);
@@ -222,11 +218,21 @@ public class MapClass {
             }
         }
         deleteBools(areaMatrix);
+        sumFreeCell(areaMatrix);
+    }
+
+    //amount of free blocks
+    private void sumFreeCell(CellMatrix[][] areaMatrix){
+        freeCell = 0;
+        for(int line = 1; line < size -1; line++)
+            for (int lineVer = 1; lineVer < size; lineVer++)
+                if (areaMatrix[line][lineVer].getId() == 0)
+                    freeCell++;
     }
 
     private void deleteBools(CellMatrix[][] areaMatrix){
-        for(int line = 1; line < size -1; line++){
-            for (int lineVer = 0; lineVer < 5; lineVer++){
+        for(int line = 0; line < size -1; line++){
+            for (int lineVer = 0; lineVer < size; lineVer++){
                 if (areaMatrix[lineVer][line].isDelete()){
                     playerData.setScore(areaMatrix[lineVer][line].getId());
                     areaMatrix[lineVer][line].setId(0);
@@ -238,14 +244,12 @@ public class MapClass {
 
 
     private void recursMove(int cell, boolean emptyCell,CellMatrix[] array){
-        if (extrimExitRecurs > 10)
+        if (extrimExitRecurs > size)
             return;
         extrimExitRecurs++;
 
         if (!(cell+direction < size && cell > 0))
             return;
-
-        Gdx.app.log("TEST","Work");
 
         if (array[cell].getId() == 0){
             recursMove(cell+direction,true,array);
@@ -302,7 +306,7 @@ public class MapClass {
     }
 
     private void addAction(int count){
-        for (int i = 0; i < count; i++){
+        for (int i = 0; i < count && freeCell > 0;){
             int colum = random(size -2)+1;
             int row = random(size -2)+1;
             if (map[colum][row].getId() == 0){
@@ -318,8 +322,9 @@ public class MapClass {
                         map[colum][row].setId(5);
                         break;
                 }
+                i++;
+                freeCell--;
             }
-            //Gdx.app.log("add",colum + " " + row + " " + map[colum][row].getId());
         }
     }
 
@@ -345,8 +350,17 @@ public class MapClass {
     public String getNameSprite(int x, int y){
         return map[x][y].getNameSprite();
     }
+
     public Color getColorCell(int x, int y){
         return map[x][y].getColor();
+    }
+
+    public StatusDrawGame getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusDrawGame status) {
+        this.status = status;
     }
 
     /////////////////////////////////

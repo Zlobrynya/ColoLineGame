@@ -3,6 +3,7 @@ package com.zlobrynya.colorgame;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,8 +15,10 @@ public class DrawGame {
     private TextureAtlas textureAtlas;
     private ShapeRenderer shapeRenderer;
 
+    static final public int INDENT = 90;
+
     //draw Text
-    BitmapFont font = new BitmapFont();
+    private BitmapFont font = new BitmapFont();
 
     DrawGame(SpriteBatch spriteBatch){
         this.spriteBatch = spriteBatch;
@@ -24,8 +27,36 @@ public class DrawGame {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
     }
 
+    public void drawGame(MapClass mapClass, Player playerData, StatusDrawGame statusDrawGame){
+        switch (statusDrawGame){
+            case ANIMATION:
+                break;
+            case MOUTION:
+                drawBackground();
+                drawMap(mapClass,playerData);
+                mapClass.setStatus(StatusDrawGame.STOP);
+                break;
+            case STOP:
+                break;
+            case GAME_OVER:
+                drawBackground();
+                drawGameOver();
+                mapClass.setStatus(StatusDrawGame.STOP);
+                break;
+        }
+    }
 
-    public void drawMap(MapClass mapClass, Player playerData){
+    private void drawBackground(){
+        Gdx.gl.glClearColor(0.57f, 0.77f, 0.85f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    }
+
+
+    private void drawGameOver(){
+
+    }
+
+    private void drawMap(MapClass mapClass, Player playerData){
         float wigthCell = mapClass.getWigthCell();
         float heigthCell = mapClass.getHeigthCell();
         //debugOutMatrix();
@@ -53,7 +84,7 @@ public class DrawGame {
 
      private void drawText(Player playerData, float coordX, float coordY, float size){
          spriteBatch.begin();
-         font.draw(spriteBatch, "Score: " + playerData.getScore(), coordX , coordY);
+         font.draw(spriteBatch, "Score: " + playerData.getScore(), coordX ,coordY);
          spriteBatch.end();
      }
 
@@ -62,7 +93,7 @@ public class DrawGame {
          shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
          shapeRenderer.setProjectionMatrix(spriteBatch.getProjectionMatrix());
          shapeRenderer.setColor(Color.GRAY);
-         shapeRenderer.rect(coordX-2,coordY-2,wigth-2,heigth-2);
+         shapeRenderer.rect(coordX-2,INDENT + coordY-2,wigth-2,heigth-2);
          shapeRenderer.end();
     }
 
@@ -73,7 +104,7 @@ public class DrawGame {
          shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
          shapeRenderer.setProjectionMatrix(spriteBatch.getProjectionMatrix());
          shapeRenderer.setColor(color);
-         shapeRenderer.circle(coordX,coordY,10);
+         shapeRenderer.circle(coordX, INDENT + coordY,wigth/2-15);
          shapeRenderer.end();
      }
 
@@ -81,7 +112,7 @@ public class DrawGame {
          spriteBatch.begin();
          //sprite.setPosition(heigth*mapClass.getHeigthCell(),wigth* mapClass.getSizeWigth());
          //Gdx.app.log("Draw", widthCell + " " + heigthCell + " " + width + " " + heigth + " " +  sprite);
-         sprite.setPosition(heigth*heigthCell-4,width*widthCell);
+         sprite.setPosition(heigth*heigthCell-4,INDENT + width*widthCell);
          sprite.setSize(heigthCell,widthCell);
          sprite.draw(spriteBatch);
          spriteBatch.end();
