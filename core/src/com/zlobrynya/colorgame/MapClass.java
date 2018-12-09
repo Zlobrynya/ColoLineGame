@@ -97,9 +97,11 @@ public class MapClass {
 
     public void motionCell(float x, float y, float deltaX, float deltaY){
         if (status == StatusDrawGame.STOP){
-            if (deltaX > 60 || deltaX < -60){
+           // Gdx.app.log("motion : ", "_______________________");
+           // Gdx.app.log("motion : ", "deltaX: " + deltaX + " deltaY: " + deltaY);
+            if (deltaX > wigthCell-5 || deltaX < -(wigthCell-5)){
                 motionRow(y,deltaX);
-            }else if (deltaY > 60 || deltaY < -60){
+            }else if (deltaY > heigthCell-5 || deltaY < -(heigthCell-5)){
                 motionColum(x,deltaY);
             }
         }
@@ -124,29 +126,42 @@ public class MapClass {
     }
 
     public void  motionStop(){
-        motionCell();if (colum > -1 && row < size && colum < size) {
-            checkMatch3(colum,false);
-        }else if (row > -1 && colum < size && row < size){
-            checkMatch3(row,true);
+        if (status != StatusDrawGame.STOP){
+            motionCell();
+            if (colum > -1 && row < size && colum < size) {
+                checkMatch3(colum,false);
+            }else if (row > -1 && colum < size && row < size){
+                checkMatch3(row,true);
+            }
+            status = StatusDrawGame.MOUTION;
+            direction = 0;
+            extrimExitRecurs = 0;
+            //RANDOM BOLL
+            addAction(1);
+            Gdx.app.log("freeCell : ", String.valueOf(freeCell));
+            if (freeCell == 0)
+                checkGameOver();
         }
-        status = StatusDrawGame.MOUTION;
-        direction = 0;
-        extrimExitRecurs = 0;
-        //RANDOM BOLL
-        addAction(2);
+    }
+
+    private void moveLine(int cell, boolean emptyCell,CellMatrix[] array){
+        for (int i = 0; i < size-1; i++){
+            extrimExitRecurs = 0;
+            recursMove(cell,emptyCell,array);
+        }
     }
 
     private void motionCell(){
         if (colum > -1 && row < size && colum < size){
             CellMatrix array[] = getArray(colum);
             if (direction > 0)
-                recursMove(1, false, array);
-            else recursMove(size -1,false, array);
+                moveLine(1, false, array);
+            else moveLine(size -1,false, array);
         }else if (row > -1 && colum < size && row < size){
             CellMatrix array[] = getArray(row);
             if (direction > 0)
-                recursMove(1, false, array);
-            else recursMove(size -1,false, array);
+                moveLine(1, false, array);
+            else moveLine(size -1,false, array);
         }
     }
 
@@ -182,7 +197,7 @@ public class MapClass {
         }
 
         int countColor = 1;
-        for (int line = 2; line < size; line++){
+        for (int line = 1; line < size; line++){
             if (areaMatrix[numberLine][line].getId() > 5){
                 if (areaMatrix[numberLine][line].getId() == areaMatrix[numberLine][line-1].getId()){
                     countColor++;
@@ -199,7 +214,7 @@ public class MapClass {
                 }
             }
             int countColorVertical = 0;
-            for (int lineVer = 2; lineVer < size; lineVer++){
+            for (int lineVer = 1; lineVer < size; lineVer++){
                 if (areaMatrix[lineVer][line].getId() > 5){
                     if (areaMatrix[lineVer][line].getId() == areaMatrix[lineVer-1][line].getId()){
                         countColorVertical++;
@@ -219,6 +234,30 @@ public class MapClass {
         }
         deleteBools(areaMatrix);
         sumFreeCell(areaMatrix);
+    }
+
+    private void checkGameOver(){
+        for (int i = 1; i < size - 1; i++){
+            CellMatrix[] array = getArray(i);
+            if (findMix(0,array,1) == 1){
+                return;
+            }
+        }
+        status = StatusDrawGame.GAME_OVER;
+    }
+
+    private int findMix(int previousColor, CellMatrix[] array, int number){
+        boolean exit = false;
+        int sumColor = previousColor + array[number].getId();
+        exit = sumColor > 6 && sumColor < 10;
+        if (exit){
+            return 1;
+        }else {
+            if (number < size-2){
+                findMix(array[number].getId(), array, ++number);
+            }
+        }
+        return 0;
     }
 
     //amount of free blocks
@@ -241,7 +280,6 @@ public class MapClass {
             }
         }
     }
-
 
     private void recursMove(int cell, boolean emptyCell,CellMatrix[] array){
         if (extrimExitRecurs > size)

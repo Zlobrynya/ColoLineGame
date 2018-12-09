@@ -28,6 +28,8 @@ public class DrawGame {
     }
 
     public void drawGame(MapClass mapClass, Player playerData, StatusDrawGame statusDrawGame){
+       /* drawBackground();
+        drawMap(mapClass,playerData);*/
         switch (statusDrawGame){
             case ANIMATION:
                 break;
@@ -53,7 +55,10 @@ public class DrawGame {
 
 
     private void drawGameOver(){
-
+        spriteBatch.begin();
+        font.getData().setScale(4);
+        font.draw(spriteBatch, "Game Over ", 150 , 150);
+        spriteBatch.end();
     }
 
     private void drawMap(MapClass mapClass, Player playerData){
@@ -84,6 +89,7 @@ public class DrawGame {
 
      private void drawText(Player playerData, float coordX, float coordY, float size){
          spriteBatch.begin();
+         font.getData().setScale(3);
          font.draw(spriteBatch, "Score: " + playerData.getScore(), coordX ,coordY);
          spriteBatch.end();
      }
