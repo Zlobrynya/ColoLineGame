@@ -1,4 +1,4 @@
-package com.zlobrynya.colorgame;
+package com.zlobrynya.colorgame.mechanics;
 
 //whis call is cell on MapMatrix
 

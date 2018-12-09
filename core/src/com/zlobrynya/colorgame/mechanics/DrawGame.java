@@ -1,4 +1,4 @@
-package com.zlobrynya.colorgame;
+package com.zlobrynya.colorgame.mechanics;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.zlobrynya.colorgame.Player;
+import com.zlobrynya.colorgame.status.StatusDrawGame;
 
 public class DrawGame {
     private SpriteBatch spriteBatch;
@@ -20,7 +22,7 @@ public class DrawGame {
     //draw Text
     private BitmapFont font = new BitmapFont();
 
-    DrawGame(SpriteBatch spriteBatch){
+    public DrawGame(SpriteBatch spriteBatch){
         this.spriteBatch = spriteBatch;
         textureAtlas = new TextureAtlas("sprite.txt");
         shapeRenderer = new ShapeRenderer();
@@ -28,6 +30,8 @@ public class DrawGame {
     }
 
     public void drawGame(MapClass mapClass, Player playerData, StatusDrawGame statusDrawGame){
+       /* drawBackground();
+        drawMap(mapClass,playerData);*/
         switch (statusDrawGame){
             case ANIMATION:
                 break;
@@ -39,8 +43,8 @@ public class DrawGame {
             case STOP:
                 break;
             case GAME_OVER:
-                drawBackground();
-                drawGameOver();
+                //drawBackground();
+                //drawGameOver();
                 mapClass.setStatus(StatusDrawGame.STOP);
                 break;
         }
@@ -52,9 +56,12 @@ public class DrawGame {
     }
 
 
-    private void drawGameOver(){
-
-    }
+   /* private void drawGameOver(){
+        spriteBatch.begin();
+        font.getData().setScale(4);
+        font.draw(spriteBatch, "Game Over ", 150 , 150);
+        spriteBatch.end();
+    }*/
 
     private void drawMap(MapClass mapClass, Player playerData){
         float wigthCell = mapClass.getWigthCell();
@@ -84,6 +91,7 @@ public class DrawGame {
 
      private void drawText(Player playerData, float coordX, float coordY, float size){
          spriteBatch.begin();
+         font.getData().setScale(3);
          font.draw(spriteBatch, "Score: " + playerData.getScore(), coordX ,coordY);
          spriteBatch.end();
      }

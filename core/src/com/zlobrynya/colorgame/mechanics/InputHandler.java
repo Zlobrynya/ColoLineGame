@@ -1,4 +1,4 @@
-package com.zlobrynya.colorgame;
+package com.zlobrynya.colorgame.mechanics;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.Vector3;
 public class InputHandler implements GestureDetector.GestureListener {
     private MapClass mapClass;
     private OrthographicCamera camera;
+    private float firstTouchDownX;
+    private float firstTouchDownY;
 
     public InputHandler(MapClass mapClass,OrthographicCamera cam){
         this.mapClass = mapClass;
@@ -19,19 +21,14 @@ public class InputHandler implements GestureDetector.GestureListener {
 
     @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
-        //  Gdx.app.log("touchDown", x+" "+y);
-
+        Gdx.app.log("touchDown", x+" "+y);
+        firstTouchDownX = x;
+        firstTouchDownY = y;
         return false;
     }
 
     @Override
     public boolean tap(float x, float y, int count, int button) {
-        //   rope.setEndPosition(x ,y);
-        Vector3 vect3 = convertCoord(x,y);
-        boolean tapArea = mapClass.isArea(vect3.x,vect3.y);
-        //Gdx.app.log("Tap X", String.valueOf(vect3.x));
-        //Gdx.app.log("Tap Y", String.valueOf(vect3.y));
-        //Gdx.app.log("Tap", String.valueOf(tapArea));
         return false;
     }
 
@@ -54,17 +51,21 @@ public class InputHandler implements GestureDetector.GestureListener {
 
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
-        //  rope.setStartPosition(x-deltaX,y-deltaY);
+      /* //  rope.setStartPosition(x-deltaX,y-deltaY);
         Vector3 vector3 = convertCoord(x,y);
-       // Gdx.app.log("pan", "x: " + vector3.x +" y: "+vector3.y+" deltaX: "+deltaX+" deltaY: "+deltaY);
-        mapClass.motionCell(vector3.x,vector3.y,deltaX,deltaY);
+        Gdx.app.log("pan", "x: " + x +" y: "+ y);
+        mapClass.motionCell(vector3.x,vector3.y,deltaX,deltaY);*/
         return false;
     }
 
     @Override
     public boolean panStop(float x, float y, int pointer, int button) {
-        Gdx.app.log("-------", "-------");
+       /* Gdx.app.log("-------", "-------");
         Gdx.app.log("panStop", x+" "+y);
+        Gdx.app.log("DeltaX", String.valueOf(x-firstTouchDownX));
+        Gdx.app.log("DeltaY", String.valueOf(y-firstTouchDownY));*/
+        Vector3 vector3 = convertCoord(x,y);
+        mapClass.motionCell(vector3.x,vector3.y,x-firstTouchDownX,y-firstTouchDownY);
         mapClass.motionStop();
         return false;
     }

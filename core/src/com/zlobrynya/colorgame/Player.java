@@ -6,7 +6,7 @@ public class Player {
     private int score;
     private int maxScore;
 
-    Player(int score){
+    public Player(int score){
         this.score = score;
         maxScore = 0;
     }

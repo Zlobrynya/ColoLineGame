@@ -1,4 +1,4 @@
-package com.zlobrynya.colorgame;
+package com.zlobrynya.colorgame.status;
 
 public enum StatusDrawGame {
     ANIMATION,
