@@ -1,5 +1,6 @@
 package com.zlobrynya.colorgame.screen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -50,6 +51,7 @@ public abstract class AbstractScreen implements Screen {
     @Override
     public void pause() {
 
+
     }
 
     @Override
@@ -59,7 +61,7 @@ public abstract class AbstractScreen implements Screen {
 
     @Override
     public void hide() {
-
+        Gdx.input.setInputProcessor(null);
     }
 
     @Override

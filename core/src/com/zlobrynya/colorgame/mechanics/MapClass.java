@@ -67,8 +67,9 @@ public class MapClass {
             map[y][size - 1] = new CellMatrix("crate",1);
         }
 
-        addAction(4);
+        addAction(3);
         addBlock(3,2);
+        addBlock(1,5);
         debugOutMatrix();
     }
 
@@ -124,18 +125,18 @@ public class MapClass {
     public void  motionStop(){
         if (status != StatusDrawGame.STOP){
             motionCell();
-            if (colum > -1 && row < size && colum < size) {
-                checkMatch3(colum,false);
-            }else if (row > -1 && colum < size && row < size){
-                checkMatch3(row,true);
-            }
+            checkMatch3();
+
             status = StatusDrawGame.MOUTION;
             direction = 0;
             extrimExitRecurs = 0;
-            //RANDOM BOLL
             addAction(1);
-            if (freeCell == 0)
-                checkGameOver();
+            sumFreeCell(map);
+            if (freeCell == 0) {
+                Gdx.app.log("GameOver", freeCell + "");
+                status = StatusDrawGame.GAME_OVER;
+                //checkGameOver();
+            }
         }
     }
 
@@ -148,22 +149,23 @@ public class MapClass {
 
     private void motionCell(){
         if (colum > -1 && row < size && colum < size){
-            CellMatrix array[] = getArray(colum);
+            CellMatrix array[] = getArray(colum,true);
             if (direction > 0)
                 moveLine(1, false, array);
             else moveLine(size -1,false, array);
         }else if (row > -1 && colum < size && row < size){
-            CellMatrix array[] = getArray(row);
+            CellMatrix array[] = getArray(row,false);
             if (direction > 0)
                 moveLine(1, false, array);
             else moveLine(size -1,false, array);
         }
     }
 
-    private CellMatrix[] getArray(int number){
+    //@direction: true - vericaly, false horizontaly
+    private CellMatrix[] getArray(int number, boolean direction){
         CellMatrix[] array = new CellMatrix[size];
         for (int i = 0; i < size; i++) {
-            if (colum > -1 && row < 12){
+            if (direction){
                 array[i] = map[number][i];
             }else {
                 array[i] = map[i][number];
@@ -183,58 +185,47 @@ public class MapClass {
     }
 
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Исправить
-    private void checkMatch3(int numberLine, boolean trans){
-        CellMatrix[][] areaMatrix = null;
-
-        if (trans){
-            areaMatrix = transMatrix();
-        }else {
-            areaMatrix = map;
+    private void checkMatch3(){
+        for (int x = 1, y = 1; x < size - 1; x++, y++){
+            CellMatrix[] array = getArray(x, false);
+            //Gdx.app.log("findMatch3", "X: " + x );
+            findMatch3(array,1,0);
+            //Gdx.app.log("findMatch3", "Y: " + y );
+            array = getArray(y, true);
+            findMatch3(array,1,0);
         }
+        deleteBools(map);
+    }
 
-        int countColor = 1;
-        for (int line = 1; line < size; line++){
-            if (areaMatrix[numberLine][line].getId() > 5){
-                if (areaMatrix[numberLine][line].getId() == areaMatrix[numberLine][line-1].getId()){
-                    countColor++;
-                    if (countColor == 3){
-                        areaMatrix[numberLine][line].setDelete(true);
-                        areaMatrix[numberLine][line-1].setDelete(true);
-                        areaMatrix[numberLine][line-2].setDelete(true);
-                    }
-                    if (countColor > 3){
-                        areaMatrix[numberLine][line].setDelete(true);
-                    }
-                }else{
-                    countColor = 0;
+    private void findMatch3(CellMatrix[] array, int number, int count){
+        //ectrimal exit
+        if (number >= size)
+            return;
+
+        int curretColor = array[number].getId();
+        int previousColor = array[number-1].getId();
+        //Gdx.app.log("findMatch3", "currer: " + curretColor + " previous: " + previousColor);
+        if (curretColor > 6 && previousColor > 6){
+            if (curretColor == previousColor){
+                count++;
+                if (count == 2){
+                    array[number].setDelete(true);
+                    array[number-1].setDelete(true);
+                    array[number-2].setDelete(true);
                 }
-            }
-            int countColorVertical = 0;
-            for (int lineVer = 1; lineVer < size; lineVer++){
-                if (areaMatrix[lineVer][line].getId() > 5){
-                    if (areaMatrix[lineVer][line].getId() == areaMatrix[lineVer-1][line].getId()){
-                        countColorVertical++;
-                        if (countColorVertical == 2){
-                            areaMatrix[lineVer][line].setDelete(true);
-                            areaMatrix[lineVer-1][line].setDelete(true);
-                            areaMatrix[lineVer-2][line].setDelete(true);
-                        }
-                        if (countColorVertical > 3){
-                            areaMatrix[lineVer][line].setDelete(true);
-                        }
-                    }else{
-                        countColorVertical = 0;
-                    }
+                if (count > 2){
+                    array[number].setDelete(true);
                 }
+                findMatch3(array,number + 1,count);
+                return;
             }
         }
-        deleteBools(areaMatrix);
-        sumFreeCell(areaMatrix);
+        findMatch3(array,number + 1,0);
     }
 
     private void checkGameOver(){
         for (int i = 1; i < size - 1; i++){
-            CellMatrix[] array = getArray(i);
+            CellMatrix[] array = getArray(i,false);
             Gdx.app.log("findMix[x] ", String.valueOf(i));
 
             int result = findMix(1,array,2);
@@ -267,10 +258,11 @@ public class MapClass {
     //amount of free blocks
     private void sumFreeCell(CellMatrix[][] areaMatrix){
         freeCell = 0;
-        for(int line = 1; line < size -1; line++)
-            for (int lineVer = 1; lineVer < size; lineVer++)
-                if (areaMatrix[line][lineVer].getId() == 0)
+        for(int line = 0; line < size; line++)
+            for (int lineVer = 0; lineVer < size; lineVer++)
+                if (areaMatrix[line][lineVer].getId() == 0) {
                     freeCell++;
+                }
     }
 
     private void deleteBools(CellMatrix[][] areaMatrix){
@@ -348,7 +340,7 @@ public class MapClass {
     }
 
     private void addAction(int count){
-        for (int i = 0; i < count && freeCell > 0;){
+        for (int i = 0; freeCell > 0;){
             int colum = random(size -2)+1;
             int row = random(size -2)+1;
             if (map[colum][row].getId() == 0){
@@ -366,6 +358,8 @@ public class MapClass {
                 }
                 i++;
                 freeCell--;
+                if (i >= count)
+                    break;
             }
         }
     }

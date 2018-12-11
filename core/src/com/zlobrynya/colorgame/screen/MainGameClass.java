@@ -45,6 +45,7 @@ public class MainGameClass extends Game {
                 setScreen(gameScreen);
                 break;
             case GameOverScreen:
+                Gdx.app.log("GameOver", "StatusStart");
                 setScreen(gameOverScreen);
                 break;
             default:

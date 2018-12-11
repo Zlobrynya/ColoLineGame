@@ -32,7 +32,7 @@ public class DrawGame {
     public void drawGame(MapClass mapClass, Player playerData, StatusDrawGame statusDrawGame){
        /* drawBackground();
         drawMap(mapClass,playerData);*/
-        switch (statusDrawGame){
+       /* switch (statusDrawGame){
             case ANIMATION:
                 break;
             case MOUTION:
@@ -47,7 +47,10 @@ public class DrawGame {
                 //drawGameOver();
                 mapClass.setStatus(StatusDrawGame.STOP);
                 break;
-        }
+        }*/
+        drawBackground();
+        drawMap(mapClass,playerData);
+        mapClass.setStatus(StatusDrawGame.STOP);
     }
 
     private void drawBackground(){

@@ -35,15 +35,20 @@ public class GameScreen extends AbstractScreen {
         drawGame = new DrawGame(getBatch());
 
         Gdx.input.setInputProcessor((new GestureDetector(new InputHandler(mapClass,getCamera()))));
-
     }
 
     @Override
     public void render(float delta) {
-       // Gdx.app.log("render","render");
-        drawGame.drawGame(mapClass, playerData, mapClass.getStatus());
-        if (mapClass.getStatus() == StatusDrawGame.GAME_OVER){
-            setGameClass(StatusScreen.GameOverScreen);
+        switch (mapClass.getStatus()){
+            case GAME_OVER:
+                Gdx.app.log("GameOver", "Status");
+                setGameClass(StatusScreen.GameOverScreen);
+                break;
+            case STOP:
+                break;
+            case MOUTION:
+                drawGame.drawGame(mapClass, playerData, mapClass.getStatus());
+                break;
         }
     }
 
