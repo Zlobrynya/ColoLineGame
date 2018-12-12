@@ -3,11 +3,12 @@ package com.zlobrynya.colorgame.mechanics;
 //whis call is cell on MapMatrix
 
 import com.badlogic.gdx.graphics.Color;
+import com.zlobrynya.colorgame.enume.NameColorTexture;
 
 public class CellMatrix {
     private String nameSprite;
     private int id;
-    private Color color;
+    private NameColorTexture color;
     private boolean delete;
 
     CellMatrix(String nameSpritt, int id){
@@ -17,32 +18,32 @@ public class CellMatrix {
         setColor();
     }
 
-    public Color getColor() {
+    public NameColorTexture getColor() {
         return color;
     }
 
     private void setColor() {
         switch (id){
             case 3:
-                color = Color.RED;
+                color = NameColorTexture.RED;
                 break;
             case 4:
-                color = Color.BLUE;
+                color = NameColorTexture.BLUE;
                 break;
             case 5:
-                color = Color.YELLOW;
+                color = NameColorTexture.YELLOW;
                 break;
             case 7:
-                color = Color.VIOLET;
+                color = NameColorTexture.VIOLET;
                 break;
             case 8:
-                color = Color.ORANGE;
+                color = NameColorTexture.ORANGE;
                 break;
             case 9:
-                color = Color.GREEN;
+                color = NameColorTexture.GREEN;
                 break;
              default:
-                color = Color.WHITE;
+                color = NameColorTexture.RED;
                 break;
         }
     }

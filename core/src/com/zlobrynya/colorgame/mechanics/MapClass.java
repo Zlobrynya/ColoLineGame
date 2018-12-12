@@ -4,7 +4,8 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.zlobrynya.colorgame.Player;
-import com.zlobrynya.colorgame.status.StatusDrawGame;
+import com.zlobrynya.colorgame.enume.NameColorTexture;
+import com.zlobrynya.colorgame.enume.StatusDrawGame;
 
 import static com.badlogic.gdx.math.MathUtils.random;
 import static java.lang.Math.abs;
@@ -93,7 +94,7 @@ public class MapClass {
     }
 
     public void motionCell(float x, float y, float deltaX, float deltaY){
-        if (status == StatusDrawGame.STOP){
+        if (status == StatusDrawGame.STOP && isArea(x,y)){
            // Gdx.app.log("motion : ", "_______________________");
            // Gdx.app.log("motion : ", "deltaX: " + deltaX + " deltaY: " + deltaY);
             if (deltaX > wigthCell-5 || deltaX < -(wigthCell-5)){
@@ -387,7 +388,7 @@ public class MapClass {
         return map[x][y].getNameSprite();
     }
 
-    public Color getColorCell(int x, int y){
+    public NameColorTexture getColorCell(int x, int y){
         return map[x][y].getColor();
     }
 

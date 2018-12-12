@@ -5,7 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.zlobrynya.colorgame.status.StatusScreen;
+import com.zlobrynya.colorgame.enume.StatusScreen;
 
 public abstract class AbstractScreen implements Screen {
     private OrthographicCamera camera;

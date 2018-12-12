@@ -5,12 +5,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.zlobrynya.colorgame.status.StatusDrawGame;
 import com.zlobrynya.colorgame.mechanics.DrawGame;
 import com.zlobrynya.colorgame.mechanics.InputHandler;
 import com.zlobrynya.colorgame.mechanics.MapClass;
 import com.zlobrynya.colorgame.Player;
-import com.zlobrynya.colorgame.status.StatusScreen;
+import com.zlobrynya.colorgame.enume.StatusScreen;
 
 public class GameScreen extends AbstractScreen {
     private TextureAtlas textureAtlas;
@@ -35,6 +34,7 @@ public class GameScreen extends AbstractScreen {
         drawGame = new DrawGame(getBatch());
 
         Gdx.input.setInputProcessor((new GestureDetector(new InputHandler(mapClass,getCamera()))));
+
     }
 
     @Override
@@ -47,9 +47,10 @@ public class GameScreen extends AbstractScreen {
             case STOP:
                 break;
             case MOUTION:
-                drawGame.drawGame(mapClass, playerData, mapClass.getStatus());
+
                 break;
         }
+        drawGame.drawGame(mapClass, playerData,delta);
     }
 
     @Override

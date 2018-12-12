@@ -2,15 +2,12 @@ package com.zlobrynya.colorgame.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.zlobrynya.colorgame.status.StatusScreen;
+import com.zlobrynya.colorgame.enume.StatusScreen;
 
 public class GameOverScreen extends AbstractScreen implements InputProcessor {
     private SpriteBatch spriteBatch;

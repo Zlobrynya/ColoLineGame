@@ -1,0 +1,173 @@
+actor_blue_move.png
+size: 345, 70
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+BLUE
+  rotate: false
+  xy: 1, 1
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 0
+BLUE
+  rotate: false
+  xy: 60, 1
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 1
+BLUE
+  rotate: false
+  xy: 124, 1
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 2
+BLUE
+  rotate: false
+  xy: 186, 1
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 3
+RED
+  rotate: false
+  xy: 1, 61
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 0
+RED
+  rotate: false
+  xy: 60, 61
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 1
+RED
+  rotate: false
+  xy: 124, 61
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 2
+RED
+  rotate: false
+  xy: 186, 61
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 3
+YELLOW
+  rotate: false
+  xy: 1, 122
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 0
+YELLOW
+  rotate: false
+  xy: 60, 122
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 1
+YELLOW
+  rotate: false
+  xy: 124, 122
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 2
+YELLOW
+  rotate: false
+  xy: 186, 122
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 3
+VIOLET
+  rotate: false
+  xy: 1, 183
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 0
+VIOLET
+  rotate: false
+  xy: 60, 183
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 1
+VIOLET
+  rotate: false
+  xy: 124, 183
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 2
+VIOLET
+  rotate: false
+  xy: 186, 183
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 3
+GREEN
+  rotate: false
+  xy: 1, 243
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 0
+GREEN
+  rotate: false
+  xy: 60, 243
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 1
+GREEN
+  rotate: false
+  xy: 124, 243
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 2
+GREEN
+  rotate: false
+  xy: 186, 243
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 3
+ORANGE
+  rotate: false
+  xy: 1, 305
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 0
+ORANGE
+  rotate: false
+  xy: 60, 305
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 1
+ORANGE
+  rotate: false
+  xy: 124, 305
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 2
+ORANGE
+  rotate: false
+  xy: 186, 305
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 3

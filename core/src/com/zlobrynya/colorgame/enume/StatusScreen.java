@@ -1,4 +1,4 @@
-package com.zlobrynya.colorgame.status;
+package com.zlobrynya.colorgame.enume;
 
 
 public enum StatusScreen {
